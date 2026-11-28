@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>タイピング道場 | 日本語タイピングゲーム</title>
+<meta name="description" content="ひらがなのお題をローマ字で打つ、日本語タイピングゲーム。60秒チャレンジと1文タイムアタック。">
+<meta name="theme-color" content="#0a0f1c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<script>
+try {
+  var savedTheme = localStorage.getItem("taipingu-theme");
+  if (savedTheme === "light" || savedTheme === "dark") {
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  }
+} catch (e) { /* テーマ保存が使えない環境ではダークを既定にする */ }
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#top">⌨️ タイピング道場</a>
+    <span class="topbar-links">
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="テーマ切り替え">🌙</button>
+    </span>
+  </div>
+</nav>
+
+<header class="site-header wrap" id="top">
+  <p class="eyebrow">TYPING DOJO</p>
+  <h1>⌨️ <span class="title-text">タイピング道場</span></h1>
+  <p class="tagline">ひらがなのお題をローマ字で打とう</p>
+</header>
+
+<main>
+  <!-- 🎮 モード選択 -->
+  <section id="screen-home" class="screen">
+    <div class="card">
+      <h2 class="sec-title">モードを選ぶ</h2>
+      <button id="btn-mode-60" class="btn btn-primary btn-big">⏱ 60秒チャレンジ</button>
+      <p class="mode-desc">60秒で何文字打てるか。打てた文字数と正確さでスコアが決まります。</p>
+      <button id="btn-mode-ta" class="btn btn-primary btn-big">🏃 1文タイムアタック</button>
+      <p class="mode-desc">1文を打ち切るまでのタイムを競います。</p>
+      <div class="best-box">
+        <h3>🏆 ベストスコア</h3>
+        <p>60秒チャレンジ: <strong id="best-60">―</strong></p>
+        <p>タイムアタック: <strong id="best-ta">―</strong></p>
+      </div>
+      <details class="howto">
+        <summary>あそびかた・ルール</summary>
+        <ul>
+          <li>表示されたひらがなを、ローマ字で入力します。</li>
+          <li>表記ゆれOK: し=shi/si、ち=chi/ti、つ=tsu/tu、ふ=fu/hu、じ=ji/zi、しゃ=sya/sha など。</li>
+          <li>「ん」は nn でも n でもOK（次の文字が子音のとき）。「っ」は子音を重ねます（例: ずっと = zutto）。</li>
+          <li>間違えたキーは入力されず、ミスとして数えます。バックスペースは使いません。</li>
+          <li>スマホの場合は入力欄をタップしてキーボードを出し、英字モードで打ってください。</li>
+        </ul>
+      </details>
+    </div>
+  </section>
+
+  <!-- 🎮 ゲーム画面 -->
+  <section id="screen-game" class="screen hidden">
+    <div class="card">
+      <div class="hud">
+        <div class="hud-item">⏱ <span id="hud-time">60.0</span></div>
+        <div class="hud-item">✔ <span id="hud-correct">0</span>文字</div>
+        <div class="hud-item">✖ ミス <span id="hud-miss">0</span></div>
+        <div class="hud-item">正確率 <span id="hud-acc">100%</span></div>
+      </div>
+      <div id="sentence-kana" class="sentence" aria-label="お題文（かな）"></div>
+      <div id="sentence-romaji" class="sentence romaji" aria-label="お題文（ローマ字）"></div>
+      <input id="typer" type="text" autocomplete="off" autocapitalize="none" autocorrect="off"
+             spellcheck="false" placeholder="ここをタップ/クリックして入力開始" aria-label="タイピング入力欄">
+      <p id="game-note" class="note">最初のキーを押すとスタートします。</p>
+      <button id="btn-quit" class="btn btn-ghost">やめる</button>
+    </div>
+  </section>
+
+  <!-- 🏆 結果画面 -->
+  <section id="screen-result" class="screen hidden">
+    <div class="card">
+      <h2 id="result-title" class="sec-title">結果</h2>
+      <p id="result-newbest" class="newbest hidden">🎉 ベストスコア更新！</p>
+      <table class="result-table">
+        <tr><th>スコア</th><td id="res-score">―</td></tr>
+        <tr><th>打てた文字数</th><td id="res-chars">―</td></tr>
+        <tr><th>CPM（1分あたり文字数）</th><td id="res-cpm">―</td></tr>
+        <tr><th>WPM（1分あたり単語数）</th><td id="res-wpm">―</td></tr>
+        <tr><th>正確率</th><td id="res-acc">―</td></tr>
+        <tr><th>ミス</th><td id="res-miss">―</td></tr>
+        <tr><th>タイム</th><td id="res-time">―</td></tr>
+      </table>
+      <div class="result-btns">
+        <button id="btn-card" class="btn btn-primary">🖼 スコアカードを保存</button>
+        <button id="btn-retry" class="btn">もう一度</button>
+        <button id="btn-home" class="btn btn-ghost">モード選択へ</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer wrap">
+  <p>タイピング道場 — スコアはこの端末にだけ保存されます</p>
+</footer>
+
+<script src="js/typing-core.js"></script>
+<script src="app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
