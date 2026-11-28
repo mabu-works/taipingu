@@ -1,0 +1,1 @@
+{"description":"タイピング道場 — ひらがなのお題をローマ字で打つ日本語タイピングゲーム","name":"taipingu","private":true,"scripts":{"check":"node --check js/typing-core.js && node --check app.js && node --check sw.js","test":"node --test tests/*.test.js"},"version":"1.0.0"}

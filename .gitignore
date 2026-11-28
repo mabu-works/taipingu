@@ -1,0 +1,13 @@
+.vercel
+.env*
+node_modules/
+dist/
+data/
+*.log
+
+# 🪟 Windows 版のビルド成果物
+windows/bin/
+windows/obj/
+windows/dist/
+windows/tests/bin/
+windows/tests/obj/
