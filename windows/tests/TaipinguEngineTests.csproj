@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- 🧪 TypingEngine の純ロジックを Linux でも検証するためのコンソールテスト。
+       WinForms には依存せず、エンジンのソースをリンクして取り込む。 -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <AssemblyName>TaipinguEngineTests</AssemblyName>
+    <RootNamespace>Taipingu</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\TypingEngine.cs" Link="TypingEngine.cs" />
+  </ItemGroup>
+
+</Project>
